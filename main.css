@@ -1,0 +1,81 @@
+html,
+body {
+	background: #222;
+	color: #fff;
+	font-size: 25px;
+	font-family: 'Lato', sans-serif;
+}
+
+h1 {
+	margin: 0;
+	text-transform: uppercase;
+}
+
+ul,
+li {
+	margin: 0;
+	padding: 0;
+	list-style-type: none;
+}
+
+a {
+	color: #91b2ff;
+	text-decoration: none;
+}
+
+.hide {
+	display: none;
+}
+
+.bill-list {
+	padding: 20px;
+}
+
+.bill-month {
+	font-size: 50px;
+	border: 1px solid #fff;
+	display: inline-block;
+	padding: 5px;
+	margin: 20px 0;
+	cursor: pointer;
+}
+
+.bill-item {
+	margin-top: 10px;
+}
+
+.bill-amount {
+	font-size: 35px;
+}
+
+.bill-name {
+	font-size: 25px;
+}
+
+.user-overlay {
+	height: 100%;
+	width: 100%;
+	top: 0;
+	left: 0;
+	position: fixed;
+	background: #fff;
+	color: #222;
+	text-align: center;
+	transition: .5s;
+	padding: 25px;
+	transform: translateY(-100%);
+}
+
+.roomie {
+	text-align: center;
+}
+
+.roomie span {
+	display: inline-block;
+	width: 30%;
+	border: 1px solid #222;
+	margin: 10px 0;
+	padding: 10px;
+	text-transform: uppercase;
+	cursor: pointer;
+}
