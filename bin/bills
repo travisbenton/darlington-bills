@@ -19,7 +19,7 @@ function saveOwedBill(type, total, date, cb) {
         // Object.keys(roommates).forEach(roommate => {
         //   cb(roommates, roommate, type, total, date, payload);
         // });
-        cb(roommatemmates, 'travis', type, total, date, payload);
+        cb(roommates, 'travis', type, total, date, payload);
       }
 
       if (!bills) {
@@ -72,12 +72,22 @@ firebase.database().ref('tokens/').once('value').then(resp => {
   }
 
   function parseEmail(message) {
-    let part = message.payload.parts.filter(part => part.mimeType == 'text/html')[0];
-    // in the case there are no text/html parts, check for 
-    // multipart/alternative... sort of a gross workaround
-    if (!part) {
-      part = message.payload.parts.filter(part => part.mimeType == 'multipart/alternative')[0].parts.filter(part => part.mimeType == 'text/html')[0];
+    const parts = message.payload.parts;
+    let part;
+
+    if (!parts) {
+      part = {};
+      part.body = message.payload.body
+    } else {
+      part = parts.filter(part => part.mimeType == 'text/html')[0];
+
+      // in the case there are no text/html parts, check for 
+      // multipart/alternative... sort of a gross workaround
+      if (!part) {
+        part = message.payload.parts.filter(part => part.mimeType == 'multipart/alternative')[0].parts.filter(part => part.mimeType == 'text/html')[0];
+      }      
     }
+
     return new Buffer(part.body.data.replace(/-/g, '+').replace(/_/g, '/'), 'base64').toString();
   }
 
@@ -149,8 +159,9 @@ firebase.database().ref('tokens/').once('value').then(resp => {
     const html = parseEmail(message);
     const totalOwed = ((parseFloat(html.split('$')[1].split('<')[0], 10))).toFixed(2);
     const date = new Date(parseInt(message.internalDate, 10));
+
     // if I get the email later in the month, assume its for the following month
-    const month = date.getDate() < 10 ? date.getMonth() : date.getMonth() + 1;
+    const month = date.getDate() < 10 ? date.getMonth() + 1 : date.getMonth() + 2;
     const billDate = `${month}-${date.getFullYear()}`;
 
     console.log('---------=======--------');
