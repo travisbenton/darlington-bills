@@ -39,10 +39,10 @@ function saveOwedBill(type, total, date, cb) {
       const roommates = resp.val().users;
 
       function dispatchEmails (payload) {
-        // Object.keys(roommates).forEach(roommate => {
-        //   cb(roommates, roommate, type, total, date, payload);
-        // });
-        cb(roommates, 'travis', type, total, date, payload);
+        Object.keys(roommates).forEach(roommate => {
+          cb(roommates, roommate, type, total, date, payload);
+        });
+        // cb(roommates, 'travis', type, total, date, payload);
       }
 
       if (!bills) {
