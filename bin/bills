@@ -3,8 +3,27 @@ const firebase = require('firebase');
 const Base64 = require('js-base64/base64.js').Base64;
 const google = require('googleapis');
 const googleAuth = require('google-auth-library');
-const config = require('../config');
+const config = require('./config');
 require('firebase/database');
+
+const STATIC_MONTHLY_BILLS = {
+  rent: '2100.00',
+  cable: '55.29'
+};
+const USER_SCOPED_BILLS = ['rent'];
+const EMAIL_ADDRESSES = {
+  utilities: 'do-not-reply@coautilities.com',
+  gas: 'ebill@texasgasservice.com'
+};
+const FIREBASE_CONFIG = {
+  apiKey: process.env.FIREBASE_CONFIG_APIKEY,
+  authDomain: process.env.FIREBASE_CONFIG_AUTHDOMAIN,
+  databaseURL: process.env.FIREBASE_CONFIG_DATABASEURL,
+  storageBucket: process.env.FIREBASE_CONFIG_STORAGEBUCKET,
+  messagingSenderId: process.env.FIREBASE_CONFIG_MESSAGINGSENDERID
+}
+
+
 
 firebase.initializeApp(config.FIREBASE_CONFIG);
 
@@ -23,7 +42,7 @@ function saveOwedBill(type, total, date, cb) {
       }
 
       if (!bills) {
-        const payload = Object.assign(config.STATIC_MONTHLY_BILLS, { [type]: total });
+        const payload = Object.assign(STATIC_MONTHLY_BILLS, { [type]: total });
         firebase.database().ref(`api/bills/${date}/`).set(payload);
         dispatchEmails(payload);
       } else if (!(bills || {})[type]) {
@@ -67,7 +86,7 @@ firebase.database().ref('tokens/').once('value').then(resp => {
       }
       saveTokens(tokens);
       setCreds(tokens.access_token, tokens.refresh_token);
-      cb(config.EMAIL_ADDRESSES.utilities);
+      cb(EMAIL_ADDRESSES.utilities);
     }); 
   }
 
@@ -110,7 +129,7 @@ firebase.database().ref('tokens/').once('value').then(resp => {
           ${Object.keys(payload).map(type => {
             let billAmt;
 
-            if (config.USER_SCOPED_BILLS.indexOf(type) !== -1) {
+            if (USER_SCOPED_BILLS.indexOf(type) !== -1) {
               billAmt = parseInt(roommates[roommate][type], 10);
             } else {
               billAmt = parseInt(payload[type], 10)/4;
@@ -202,7 +221,7 @@ firebase.database().ref('tokens/').once('value').then(resp => {
   }
 
   setCreds(ACCESS_TOKEN, REFRESH_TOKEN);
-  Object.keys(config.EMAIL_ADDRESSES).forEach(type => 
-    listRecentEmailsByAccount(config.EMAIL_ADDRESSES[type], type)
+  Object.keys(EMAIL_ADDRESSES).forEach(type => 
+    listRecentEmailsByAccount(EMAIL_ADDRESSES[type], type)
   );
 });
