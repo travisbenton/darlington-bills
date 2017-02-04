@@ -21,7 +21,7 @@ const FIREBASE_CONFIG = {
   storageBucket: process.env.FIREBASE_CONFIG_STORAGEBUCKET,
   messagingSenderId: process.env.FIREBASE_CONFIG_MESSAGINGSENDERID
 }
-
+const OAUTH_CONFIG = process.env.FIREBASE_CONFIG_APIKEY.split(',');
 
 
 firebase.initializeApp(config.FIREBASE_CONFIG);
@@ -66,7 +66,7 @@ firebase.database().ref('tokens/').once('value').then(resp => {
     'https://www.googleapis.com/auth/gmail.readonly',
     'https://www.googleapis.com/auth/gmail.compose'
   ];
-  const oauth2Client = new google.auth.OAuth2(...config.OAUTH_CONFIG);
+  const oauth2Client = new google.auth.OAuth2(...OAUTH_CONFIG);
   const gmail = google.gmail('v1');
 
   function setCreds(access_token, refresh_token) {
