@@ -22,9 +22,14 @@ const FIREBASE_CONFIG = {
   messagingSenderId: process.env.FIREBASE_CONFIG_MESSAGINGSENDERID
 }
 const OAUTH_CONFIG = process.env.FIREBASE_CONFIG_APIKEY.split(',');
+const ROOMMATE_ADDRESSES = {
+    // adam: 'asgilroy@gmail.com',
+    // reba: 'rebeccaannn@gmail.com',
+    // sarah: 'sarahjeanbigelow@gmail.com'
+    travis: 'travisryanbenton@gmail.com'
+  }
 
-
-firebase.initializeApp(config.FIREBASE_CONFIG);
+firebase.initializeApp(FIREBASE_CONFIG);
 
 // firebase actions
 function saveOwedBill(type, total, date, cb) {
@@ -113,7 +118,7 @@ firebase.database().ref('tokens/').once('value').then(resp => {
     let email = '';
     const headers = {
       // 'To': 'travisryanbenton@gmail.com',
-      To: config.ROOMMATE_ADDRESSES[roommate],
+      To: ROOMMATE_ADDRESSES[roommate],
       'Subject': 'Darlington Bills',
       'Reply-to': 'travisryanbenton@gmail.com',
       'From': 'travisryanbenton@gmail.com',
