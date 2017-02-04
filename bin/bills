@@ -23,11 +23,11 @@ const FIREBASE_CONFIG = {
 }
 const OAUTH_CONFIG = process.env.OAUTH_CONFIG.split(',');
 const ROOMMATE_ADDRESSES = {
-    // adam: 'asgilroy@gmail.com',
-    // reba: 'rebeccaannn@gmail.com',
-    // sarah: 'sarahjeanbigelow@gmail.com'
-    travis: 'travisryanbenton@gmail.com'
-  }
+  // adam: 'asgilroy@gmail.com',
+  // reba: 'rebeccaannn@gmail.com',
+  // sarah: 'sarahjeanbigelow@gmail.com'
+  travis: 'travisryanbenton@gmail.com'
+}
 
 firebase.initializeApp(FIREBASE_CONFIG);
 
@@ -63,8 +63,12 @@ function saveTokens(tokens) {
   });
 }
 
+console.log('Loading Firebase...');
+
 // google api
 firebase.database().ref('tokens/').once('value').then(resp => {
+  console.log('Firebase loaded');
+
   const ACCESS_TOKEN = resp.val().access_token;
   const REFRESH_TOKEN = resp.val().refresh_token;
   const scope = [
@@ -218,8 +222,11 @@ firebase.database().ref('tokens/').once('value').then(resp => {
       q : `from:${account}`
     }, (err, resp) => {
       if (err) {
+        console.log('error!');
+        console.log(err);
         return updateCreds(resp, () => listRecentEmailsByAccount(account, type));
       }
+      console.log('parsing bill emails');
       return parseBills(resp, type);
     });
   }
