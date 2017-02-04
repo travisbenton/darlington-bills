@@ -3,7 +3,6 @@ const firebase = require('firebase');
 const Base64 = require('js-base64/base64.js').Base64;
 const google = require('googleapis');
 const googleAuth = require('google-auth-library');
-const config = require('./config');
 require('firebase/database');
 
 const STATIC_MONTHLY_BILLS = {
