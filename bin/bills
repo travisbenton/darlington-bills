@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 const firebase = require('firebase');
-const Base64 = require('./node_modules/js-base64/base64.js').Base64;
+const Base64 = require('js-base64/base64.js').Base64;
 const google = require('googleapis');
 const googleAuth = require('google-auth-library');
 const config = require('./config');
