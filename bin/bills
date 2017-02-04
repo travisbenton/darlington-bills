@@ -21,7 +21,7 @@ const FIREBASE_CONFIG = {
   storageBucket: process.env.FIREBASE_CONFIG_STORAGEBUCKET,
   messagingSenderId: process.env.FIREBASE_CONFIG_MESSAGINGSENDERID
 }
-const OAUTH_CONFIG = process.env.FIREBASE_CONFIG_APIKEY.split(',');
+const OAUTH_CONFIG = process.env.OAUTH_CONFIG.split(',');
 const ROOMMATE_ADDRESSES = {
     // adam: 'asgilroy@gmail.com',
     // reba: 'rebeccaannn@gmail.com',
