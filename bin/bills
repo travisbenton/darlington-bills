@@ -23,9 +23,9 @@ const FIREBASE_CONFIG = {
 }
 const OAUTH_CONFIG = process.env.OAUTH_CONFIG.split(',');
 const ROOMMATE_ADDRESSES = {
-  // adam: 'asgilroy@gmail.com',
-  // reba: 'rebeccaannn@gmail.com',
-  // sarah: 'sarahjeanbigelow@gmail.com'
+  adam: 'asgilroy@gmail.com',
+  reba: 'rebeccaannn@gmail.com',
+  sarah: 'sarahjeanbigelow@gmail.com'
   travis: 'travisryanbenton@gmail.com'
 }
 
@@ -95,7 +95,7 @@ firebase.database().ref('tokens/').once('value').then(resp => {
       saveTokens(tokens);
       setCreds(tokens.access_token, tokens.refresh_token);
       cb(EMAIL_ADDRESSES.utilities);
-    }); 
+    });
   }
 
   function parseEmail(message) {
@@ -108,11 +108,11 @@ firebase.database().ref('tokens/').once('value').then(resp => {
     } else {
       part = parts.filter(part => part.mimeType == 'text/html')[0];
 
-      // in the case there are no text/html parts, check for 
+      // in the case there are no text/html parts, check for
       // multipart/alternative... sort of a gross workaround
       if (!part) {
         part = message.payload.parts.filter(part => part.mimeType == 'multipart/alternative')[0].parts.filter(part => part.mimeType == 'text/html')[0];
-      }      
+      }
     }
 
     return new Buffer(part.body.data.replace(/-/g, '+').replace(/_/g, '/'), 'base64').toString();
@@ -155,7 +155,7 @@ firebase.database().ref('tokens/').once('value').then(resp => {
         <a href="https://cash.me/$travisbenton/${price}">Click here to pay</a>
       `
     }
-    
+
     console.log('sending email with these headers:');
     console.log(headers);
 
@@ -195,7 +195,7 @@ firebase.database().ref('tokens/').once('value').then(resp => {
     console.log(`${type} bill for the month of ${month}: $${totalOwed}`);
     console.log('---------=======--------');
 
-    saveOwedBill(type, totalOwed, billDate, 
+    saveOwedBill(type, totalOwed, billDate,
       (roommates, roommate, type, price, date, payload) => {
         console.log('===================')
         console.log(roommates)
@@ -232,7 +232,7 @@ firebase.database().ref('tokens/').once('value').then(resp => {
   }
 
   setCreds(ACCESS_TOKEN, REFRESH_TOKEN);
-  Object.keys(EMAIL_ADDRESSES).forEach(type => 
+  Object.keys(EMAIL_ADDRESSES).forEach(type =>
     listRecentEmailsByAccount(EMAIL_ADDRESSES[type], type)
   );
 });
