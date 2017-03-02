@@ -25,7 +25,7 @@ const OAUTH_CONFIG = process.env.OAUTH_CONFIG.split(',');
 const ROOMMATE_ADDRESSES = {
   adam: 'asgilroy@gmail.com',
   reba: 'rebeccaannn@gmail.com',
-  sarah: 'sarahjeanbigelow@gmail.com'
+  sarah: 'sarahjeanbigelow@gmail.com',
   travis: 'travisryanbenton@gmail.com'
 }
 
