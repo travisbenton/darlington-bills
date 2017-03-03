@@ -138,7 +138,7 @@ firebase.database().ref('tokens/').once('value').then(resp => {
             let billAmt;
 
             if (USER_SCOPED_BILLS.indexOf(type) !== -1) {
-              billAmt = parseInt(roommates[roommate][type], 10);
+              billAmt = parseInt(roommates[roommate][type], 10)/4;
             } else {
               billAmt = parseInt(payload[type], 10)/4;
             }
