@@ -38,24 +38,25 @@ function saveOwedBill(type, total, date, cb) {
       const bills = resp.val().bills[date];
       const roommates = resp.val().users;
       const newBill = Object.assign(STATIC_MONTHLY_BILLS, { [type]: total });
-      const currentState = Object.assign(bills, newBill);
+      const updates = Object.assign(bills, newBill);
       const sendEmail = Object.keys(BILL_EMAIL_ADDRESSES).every(bill => (bills || {})[bill] || (bills || {})[type]) &&
-        Object.keys(bills).length !== Object.keys(currentState).length;
+        Object.keys(bills).length !== Object.keys(updates).length;
 
       console.log("======= Do we send an email? ========")
       console.log(Object.keys(bills).length)
-      console.log(Object.keys(currentState).length)
+      console.log(Object.keys(updates).length)
       console.log(Object.keys(BILL_EMAIL_ADDRESSES).every(bill => (bills || {})[bill] || (bills || {})[type]))
-      console.log(Object.keys(bills).length !== Object.keys(currentState).length)
+      console.log(Object.keys(bills).length !== Object.keys(updates).length)
       console.log(type)
       console.log(bills)
+      console.log(updates)
       console.log((bills || {})[type])
       console.log("=====================================")
 
       if (!bills) {
         firebase.database().ref(`api/bills/${date}/`).set(newBill);
       } else if (!(bills || {})[type]) {
-        firebase.database().ref(`api/bills/${date}/${type}`).set(total);
+        firebase.database().ref(`api/bills/${date}/${type}`).set(updates);
       }
 
       if (sendEmail) {
