@@ -37,7 +37,8 @@ function saveOwedBill(type, total, date, cb) {
     .then(resp => {
       const bills = resp.val().bills[date];
       const roommates = resp.val().users;
-      const payload = Object.assign(STATIC_MONTHLY_BILLS, { [type]: total });
+      const newBill = Object.assign(STATIC_MONTHLY_BILLS, { [type]: total });
+      const currentState = { ...bills, ...newBill };
       const sendEmail = Object.keys(BILL_EMAIL_ADDRESSES).every(bill => (bills || {})[bill] || (bills || {})[type]);
 
       console.log("======= Do we send an email? ========")
@@ -47,15 +48,16 @@ function saveOwedBill(type, total, date, cb) {
       console.log("=====================================")
 
       if (!bills) {
-        firebase.database().ref(`api/bills/${date}/`).set(payload);
+        firebase.database().ref(`api/bills/${date}/`).set(newBill);
       } else if (!(bills || {})[type]) {
         firebase.database().ref(`api/bills/${date}/${type}`).set(total);
       }
 
       if (sendEmail) {
-        Object.keys(roommates).forEach(roommate => {
-          cb(roommates, roommate, type, total, date, payload);
-        });
+        // Object.keys(roommates).forEach(roommate => {
+        //   cb(roommates, roommate, type, total, date, payload);
+        // });
+        cb(roommates, 'travis', type, total, date, currentState);
       }
     });
 };
