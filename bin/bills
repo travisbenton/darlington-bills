@@ -7,10 +7,10 @@ require('firebase/database');
 
 const STATIC_MONTHLY_BILLS = {
   rent: '2100.00',
-  cable: '55.29'
+  cable: '65.03'
 };
 const USER_SCOPED_BILLS = ['rent'];
-const EMAIL_ADDRESSES = {
+const BILL_EMAIL_ADDRESSES = {
   utilities: 'do-not-reply@coautilities.com',
   gas: 'ebill@texasgasservice.com'
 };
@@ -37,6 +37,7 @@ function saveOwedBill(type, total, date, cb) {
     .then(resp => {
       const bills = resp.val().bills[date];
       const roommates = resp.val().users;
+      const sendEmail = Object.keys(BILL_EMAIL_ADDRESSES).every(bill => (bills || {})[bill]);
 
       function dispatchEmails (payload) {
         Object.keys(roommates).forEach(roommate => {
@@ -48,11 +49,11 @@ function saveOwedBill(type, total, date, cb) {
       if (!bills) {
         const payload = Object.assign(STATIC_MONTHLY_BILLS, { [type]: total });
         firebase.database().ref(`api/bills/${date}/`).set(payload);
-        dispatchEmails(payload);
       } else if (!(bills || {})[type]) {
         firebase.database().ref(`api/bills/${date}/${type}`).set(total);
-        dispatchEmails();
       }
+
+      sendEmail && dispatchEmails(payload);
     });
 };
 
@@ -94,7 +95,7 @@ firebase.database().ref('tokens/').once('value').then(resp => {
       }
       saveTokens(tokens);
       setCreds(tokens.access_token, tokens.refresh_token);
-      cb(EMAIL_ADDRESSES.utilities);
+      cb(BILL_EMAIL_ADDRESSES.utilities);
     });
   }
 
@@ -130,29 +131,23 @@ firebase.database().ref('tokens/').once('value').then(resp => {
     }
     const message = () => {
       const name = roommate[0].toUpperCase() + roommate.slice(1);
-      if (payload) {
-        let total = 0;
-        return `
-          Hi ${name}, some bills came in for ${date}:<br/>
-          ${Object.keys(payload).map(type => {
-            let billAmt;
-
-            if (USER_SCOPED_BILLS.indexOf(type) !== -1) {
-              billAmt = parseInt(roommates[roommate][type], 10)/4;
-            } else {
-              billAmt = parseInt(payload[type], 10)/4;
-            }
-
-            total += billAmt;
-            return `<a href="https://cash.me/$travisbenton/${billAmt}">$${billAmt} for ${type}</a><br>`
-          }).join('')}
-          Or you could pay the total ($${total}) by clicking <a href="https://cash.me/$travisbenton/${total}">here</a>
-        `
-      }
+      let total = 0;
 
       return `
-        Hi ${name}. A bill came in for ${type} this month (${date}). The total is $${price}<br />
-        <a href="https://cash.me/$travisbenton/${price}">Click here to pay</a>
+        Hi ${name}, some bills came in for ${date}:<br/>
+        ${Object.keys(payload).map(type => {
+          let billAmt;
+
+          if (USER_SCOPED_BILLS.indexOf(type) !== -1) {
+            billAmt = parseInt(roommates[roommate][type], 10);
+          } else {
+            billAmt = parseInt(payload[type], 10)/4;
+          }
+
+          total += billAmt;
+          return `<a href="https://cash.me/$travisbenton/${billAmt}">$${billAmt} for ${type}</a><br>`
+        }).join('')}
+        Or you could pay the total ($${total}) by clicking <a href="https://cash.me/$travisbenton/${total}">here</a>
       `
     }
 
@@ -232,7 +227,7 @@ firebase.database().ref('tokens/').once('value').then(resp => {
   }
 
   setCreds(ACCESS_TOKEN, REFRESH_TOKEN);
-  Object.keys(EMAIL_ADDRESSES).forEach(type =>
-    listRecentEmailsByAccount(EMAIL_ADDRESSES[type], type)
+  Object.keys(BILL_EMAIL_ADDRESSES).forEach(type =>
+    listRecentEmailsByAccount(BILL_EMAIL_ADDRESSES[type], type)
   );
 });
