@@ -46,7 +46,8 @@ function saveOwedBill(type, total, date, cb) {
       console.log(Object.keys(BILL_EMAIL_ADDRESSES).every(bill => (bills || {})[bill] || (bills || {})[type]))
       console.log(Object.keys(bills).length !== Object.keys(currentState).length)
       console.log(type)
-      console.log(!(bills || {})[type])
+      console.log(bills)
+      console.log((bills || {})[type])
       console.log("=====================================")
 
       if (!bills) {
