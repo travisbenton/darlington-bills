@@ -166,7 +166,7 @@ firebase.database().ref('tokens/').once('value').then(resp => {
                                 }
 
                                 total += billAmt;
-                                return `<a stye="margin: 0;padding: 0;font-family: 'HelveticaNeue-Light', 'Helvetica Neue Light', 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif; line-height: 1.1; margin-bottom: 1px ;color: #000;font-weight: 500;font-size: 25px;" href="https://cash.me/$travisbenton/${billAmt}">$${billAmt} for ${type}</a><br>`
+                                return `<a href="https://cash.me/$travisbenton/${billAmt}">$${billAmt} for ${type}</a><br>`
                               }).join('')}
                             </p>
                             <p style="margin: 0;padding: 0;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;margin-bottom: 10px;font-weight: normal;font-size: 14px;line-height: 1.6;"><img src="http://travisbenton.github.io/images/${Math.floor(Math.random() * (25))}.gif" style="margin: 5px 0 0 0;padding: 0;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;max-width: 100%;"></p>
