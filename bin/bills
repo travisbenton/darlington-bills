@@ -36,6 +36,9 @@ function saveOwedBill(type, total, date, cb) {
   firebase.database().ref(`api/`).once('value')
     .then(resp => {
       const bills = resp.val().bills[date];
+      console.log('************')
+      console.log(bills)
+      console.log('************')
       const roommates = resp.val().users;
       const newBill = Object.assign(STATIC_MONTHLY_BILLS, { [type]: total });
       const updates = Object.assign(bills, newBill);
@@ -56,7 +59,7 @@ function saveOwedBill(type, total, date, cb) {
       if (!bills) {
         firebase.database().ref(`api/bills/${date}/`).set(newBill);
       } else if (!(bills || {})[type]) {
-        firebase.database().ref(`api/bills/${date}/${type}`).set(updates);
+        firebase.database().ref(`api/bills/${date}/${type}`).set(total);
       }
 
       if (sendEmail) {
