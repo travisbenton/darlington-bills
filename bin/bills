@@ -37,16 +37,16 @@ function saveOwedBill(type, total, date, cb) {
     .then(resp => {
       const bills = resp.val().bills[date];
       const roommates = resp.val().users;
-      const sendEmail = Object.keys(BILL_EMAIL_ADDRESSES).every(bill => (bills || {})[bill]);
+      const payload = Object.assign(STATIC_MONTHLY_BILLS, { [type]: total });
+      const sendEmail = Object.keys(BILL_EMAIL_ADDRESSES).every(bill => (bills || {})[bill] || (bills || {})[type]);
 
       console.log("======= Do we send an email? ========")
-      Object.keys(Object.keys(BILL_EMAIL_ADDRESSES))
+      console.log(Object.keys(Object.keys(BILL_EMAIL_ADDRESSES)))
       console.log(bills)
       console.log(Object.keys(BILL_EMAIL_ADDRESSES).every(bill => (bills || {})[bill]))
       console.log("=====================================")
 
       if (!bills) {
-        const payload = Object.assign(STATIC_MONTHLY_BILLS, { [type]: total });
         firebase.database().ref(`api/bills/${date}/`).set(payload);
       } else if (!(bills || {})[type]) {
         firebase.database().ref(`api/bills/${date}/${type}`).set(total);
