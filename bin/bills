@@ -43,9 +43,8 @@ function saveOwedBill(type, total, date, cb) {
         Object.keys(bills).length !== Object.keys(currentState).length;
 
       console.log("======= Do we send an email? ========")
-      console.log(Object.keys(Object.keys(BILL_EMAIL_ADDRESSES)))
-      console.log(bills)
-      console.log(Object.keys(BILL_EMAIL_ADDRESSES).every(bill => (bills || {})[bill]))
+      console.log(Object.keys(BILL_EMAIL_ADDRESSES).every(bill => (bills || {})[bill] || (bills || {})[type]))
+      console.log(Object.keys(bills).length !== Object.keys(currentState).length)
       console.log("=====================================")
 
       if (!bills) {
