@@ -139,6 +139,7 @@ firebase.database().ref('tokens/').once('value').then(resp => {
       let total = 0;
 
       return `
+        <img src="http://travisbenton.github.io/images/${Math.floor(Math.random() * (25))}.gif" />
         Hi ${name}, some bills came in for ${date}:<br/>
         ${Object.keys(payload).map(type => {
           let billAmt;
