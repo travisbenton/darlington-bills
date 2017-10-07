@@ -40,8 +40,8 @@ function saveOwedBill(type, total, date, cb) {
       console.log(bills)
       console.log('************')
       const roommates = resp.val().users;
-      const newBill = Object.assign(STATIC_MONTHLY_BILLS, { [type]: total });
-      const updates = Object.assign(bills, newBill);
+      const newBill = Object.assign({}, STATIC_MONTHLY_BILLS, { [type]: total });
+      const updates = Object.assign({}, bills, newBill);
       const sendEmail = Object.keys(BILL_EMAIL_ADDRESSES).every(bill => (bills || {})[bill] || (bills || {})[type]) &&
         Object.keys(bills).length !== Object.keys(updates).length;
 
