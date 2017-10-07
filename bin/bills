@@ -45,13 +45,6 @@ function saveOwedBill(type, total, date, cb) {
       console.log(Object.keys(BILL_EMAIL_ADDRESSES).every(bill => (bills || {})[bill]))
       console.log("=====================================")
 
-      function dispatchEmails (payload) {
-        Object.keys(roommates).forEach(roommate => {
-          cb(roommates, roommate, type, total, date, payload);
-        });
-        // cb(roommates, 'travis', type, total, date, payload);
-      }
-
       if (!bills) {
         const payload = Object.assign(STATIC_MONTHLY_BILLS, { [type]: total });
         firebase.database().ref(`api/bills/${date}/`).set(payload);
@@ -59,7 +52,11 @@ function saveOwedBill(type, total, date, cb) {
         firebase.database().ref(`api/bills/${date}/${type}`).set(total);
       }
 
-      sendEmail && dispatchEmails(payload);
+      if (sendEmail) {
+        Object.keys(roommates).forEach(roommate => {
+          cb(roommates, roommate, type, total, date, payload);
+        });
+      }
     });
 };
 
