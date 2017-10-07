@@ -39,6 +39,12 @@ function saveOwedBill(type, total, date, cb) {
       const roommates = resp.val().users;
       const sendEmail = Object.keys(BILL_EMAIL_ADDRESSES).every(bill => (bills || {})[bill]);
 
+      console.log("======= Do we send an email? ========")
+      Object.keys(BILL_EMAIL_ADDRESSES)
+      console.log(bills)
+      console.log(Object.keys(BILL_EMAIL_ADDRESSES).every(bill => (bills || {})[bill]))
+      console.log("=====================================")
+
       function dispatchEmails (payload) {
         Object.keys(roommates).forEach(roommate => {
           cb(roommates, roommate, type, total, date, payload);
