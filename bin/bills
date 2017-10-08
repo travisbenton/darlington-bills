@@ -35,7 +35,18 @@ firebase.initializeApp(FIREBASE_CONFIG);
 function saveOwedBill(type, total, date, cb) {
   firebase.database().ref(`api/`).once('value')
     .then(resp => {
-      const bills = resp.val().bills[date];
+
+      // if I get the email later in the month, assume its for the following month
+      const month = date.getDate() < 10 ? date.getMonth() + 1 : date.getMonth() + 2;
+      const billDate = `${month}-${date.getFullYear()}`;
+      const prevBillDate = `${(month-1)}-${date.getFullYear()}`;
+
+      console.log('---------=======--------');
+      console.log(`${type} bill for the month of ${month}: $${totalOwed}`);
+      console.log('---------=======--------');
+
+      const bills = resp.val().bills[billDate];
+      const prevBills = resp.val().bills[prevBillDate];
       const roommates = resp.val().users;
       const newBill = Object.assign({}, STATIC_MONTHLY_BILLS, { [type]: total });
       const updates = Object.assign({}, bills, newBill);
@@ -53,7 +64,7 @@ function saveOwedBill(type, total, date, cb) {
         //   console.log(`Sending email to ${roommate}`);
         //   cb(roommates, roommate, type, total, date, updates);
         // });
-        cb(roommates, 'travis', type, total, date, updates);
+        cb(roommates, 'travis', type, total, billDate, updates, prevBills);
       }
     });
 };
@@ -120,7 +131,7 @@ firebase.database().ref('tokens/').once('value').then(resp => {
     return new Buffer(part.body.data.replace(/-/g, '+').replace(/_/g, '/'), 'base64').toString();
   }
 
-  function sendMessage(auth, roommates, roommate, type, price, date, payload) {
+  function sendMessage(auth, roommates, roommate, type, price, date, payload, prevBills) {
     let email = '';
     const headers = {
       // 'To': 'travisryanbenton@gmail.com',
@@ -136,7 +147,6 @@ firebase.database().ref('tokens/').once('value').then(resp => {
 
       return `
         <head style="margin: 0;padding: 0;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;">
-
           <meta name="viewport" content="width=device-width" style="margin: 0;padding: 0;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;">
           <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" style="margin: 0;padding: 0;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;">
           <title style="margin: 0;padding: 0;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;">ZURBemails</title>
@@ -157,16 +167,22 @@ firebase.database().ref('tokens/').once('value').then(resp => {
                             <p class="lead" style="margin: 0;padding: 0;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;margin-bottom: 10px;font-weight: normal;font-size: 17px;line-height: 1.6;">Some bills came in for ${date}.</p>
                             <p style="margin: 0;padding: 0;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;margin-bottom: 10px;font-weight: normal;font-size: 16px;line-height: 1.6;">
                               ${Object.keys(payload).map(type => {
+                                let difference = 0;
                                 let billAmt;
 
                                 if (USER_SCOPED_BILLS.indexOf(type) !== -1) {
                                   billAmt = parseInt(roommates[roommate][type], 10);
                                 } else {
                                   billAmt = parseInt(payload[type], 10)/4;
+                                  difference = (parseInt(prevBills[type], 10)/4) - billAmt;
                                 }
 
+                                const change = difference && difference > 0 ?
+                                  `<span style="color: green">+${difference}</span>` :
+                                  `<span style="color: red">-${difference}</span>`;
+<span style='color: '>(${change}${difference})</span>
                                 total += billAmt;
-                                return `<a href="https://cash.me/$travisbenton/${billAmt}">$${billAmt} for ${type}</a><br>`
+                                return `<a href="https://cash.me/$travisbenton/${billAmt}">$${billAmt} for ${type}</a>${change}<br>`
                               }).join('')}
                             </p>
                             <p style="margin: 0;padding: 0;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;margin-bottom: 10px;font-weight: normal;font-size: 14px;line-height: 1.6;"><img src="http://travisbenton.github.io/images/${Math.floor(Math.random() * (25))}.gif" style="margin: 5px 0 0 0;padding: 0;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;max-width: 100%;"></p>
@@ -218,15 +234,7 @@ firebase.database().ref('tokens/').once('value').then(resp => {
     const totalOwed = ((parseFloat(html.split('$')[1].split('<')[0], 10))).toFixed(2);
     const date = new Date(parseInt(message.internalDate, 10));
 
-    // if I get the email later in the month, assume its for the following month
-    const month = date.getDate() < 10 ? date.getMonth() + 1 : date.getMonth() + 2;
-    const billDate = `${month}-${date.getFullYear()}`;
-
-    console.log('---------=======--------');
-    console.log(`${type} bill for the month of ${month}: $${totalOwed}`);
-    console.log('---------=======--------');
-
-    saveOwedBill(type, totalOwed, billDate,
+    saveOwedBill(type, totalOwed, date,
       (roommates, roommate, type, price, date, payload) => {
         console.log('===================')
         console.log(roommates)
