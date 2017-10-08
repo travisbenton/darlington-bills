@@ -180,7 +180,7 @@ firebase.database().ref('tokens/').once('value').then(resp => {
                                 const change = difference && difference > 0 ?
                                   `<span style="color: green">+${difference}</span>` :
                                   `<span style="color: red">-${difference}</span>`;
-<span style='color: '>(${change}${difference})</span>
+
                                 total += billAmt;
                                 return `<a href="https://cash.me/$travisbenton/${billAmt}">$${billAmt} for ${type}</a>${change}<br>`
                               }).join('')}
