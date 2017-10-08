@@ -40,11 +40,6 @@ function saveOwedBill(type, total, date, cb) {
       const month = date.getDate() < 10 ? date.getMonth() + 1 : date.getMonth() + 2;
       const billDate = `${month}-${date.getFullYear()}`;
       const prevBillDate = `${(month-1)}-${date.getFullYear()}`;
-
-      console.log('---------=======--------');
-      console.log(`${type} bill for the month of ${month}: $${totalOwed}`);
-      console.log('---------=======--------');
-
       const bills = resp.val().bills[billDate];
       const prevBills = resp.val().bills[prevBillDate];
       const roommates = resp.val().users;
