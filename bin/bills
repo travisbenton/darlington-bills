@@ -68,6 +68,13 @@ function saveOwedBill(type, total, date, cb) {
         firebase.database().ref(`api/bills/${date}/${type}`).set(total);
       }
 
+      console.log('prevBillsprevBillsprevBillsprevBillsprevBills')
+      console.log(date)
+      console.log(billDate)
+      console.log(prevBillDate)
+      console.log(prevBills)
+      console.log('prevBillsprevBillsprevBillsprevBillsprevBills')
+
       if (sendEmail) {
         // Object.keys(roommates).forEach(roommate => {
         //   console.log(`Sending email to ${roommate}`);
