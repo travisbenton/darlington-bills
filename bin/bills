@@ -26,7 +26,8 @@ const ROOMMATE_ADDRESSES = {
   adam: 'asgilroy@gmail.com',
   reba: 'rebeccaannn@gmail.com',
   sarah: 'sarahjeanbigelow@gmail.com',
-  travis: 'travisryanbenton@gmail.com'
+  travis: 'travisryanbenton@gmail.com',
+  ifttt: 'trigger@applet.ifttt.com'
 }
 const MONTHS = [
   "January",
@@ -73,6 +74,7 @@ function saveOwedBill(type, total, date, cb) {
           console.log(`Sending email to ${roommate}`);
           cb(roommates, roommate, type, total, billDate, updates, prevBills);
         });
+        cb(roommates, 'ifttt', type, total, billDate, updates, prevBills);
       }
     });
 };
@@ -178,9 +180,9 @@ firebase.database().ref('tokens/').once('value').then(resp => {
                                 let difference = 0;
                                 let billAmt;
 
-                                if (USER_SCOPED_BILLS.indexOf(type) !== -1) {
+                                if (USER_SCOPED_BILLS.indexOf(type) !== -1 && roommate !== 'iftt') {
                                   billAmt = parseInt(roommates[roommate][type], 10);
-                                } else {
+                                } else if (roommate !== 'ifttt') {
                                   billAmt = parseInt(payload[type], 10)/4;
                                   difference = billAmt - (parseInt(prevBills[type], 10)/4);
                                 }
