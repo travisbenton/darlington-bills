@@ -63,17 +63,16 @@ function saveOwedBill(type, total, date, cb) {
         Object.keys(bills).length !== Object.keys(updates).length;
 
       if (!bills) {
-        firebase.database().ref(`api/bills/${date}/`).set(newBill);
+        firebase.database().ref(`api/bills/${billDate}/`).set(newBill);
       } else if (!(bills || {})[type]) {
-        firebase.database().ref(`api/bills/${date}/${type}`).set(total);
+        firebase.database().ref(`api/bills/${billDate}/${type}`).set(total);
       }
 
       if (sendEmail) {
-        // Object.keys(roommates).forEach(roommate => {
-        //   console.log(`Sending email to ${roommate}`);
-        //   cb(roommates, roommate, type, total, date, updates);
-        // });
-        cb(roommates, 'travis', type, total, billDate, updates, prevBills);
+        Object.keys(roommates).forEach(roommate => {
+          console.log(`Sending email to ${roommate}`);
+          cb(roommates, roommate, type, total, billDate, updates, prevBills);
+        });
       }
     });
 };
