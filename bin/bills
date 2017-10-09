@@ -4,9 +4,10 @@ const Base64 = require('js-base64/base64.js').Base64;
 const google = require('googleapis');
 const googleAuth = require('google-auth-library');
 require('firebase/database');
+
 let CONFIG = {};
 
-// node bills dev to run locally
+// `node bills dev` to run locally
 if (process.argv[2] === 'dev') {
   CONFIG = require('../config.js');
 }
