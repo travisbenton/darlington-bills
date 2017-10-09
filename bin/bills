@@ -6,12 +6,13 @@ const googleAuth = require('google-auth-library');
 require('firebase/database');
 
 // local
-const EMAIL_TMPL = require('../emailTmpl.js')
+const EMAIL_TMPL = require('../emailTmpl.js');
 
 let CONFIG = {};
+const IS_DEV = process.argv[2] === 'dev';
 
 // `node bills dev` to run locally
-if (process.argv[2] === 'dev') {
+if (IS_DEV) {
   CONFIG = require('../config.js');
 }
 
@@ -68,15 +69,17 @@ function saveOwedBill(type, total, date, cb) {
         firebase.database().ref(`api/bills/${billDate}/${type}`).set(total);
       }
 
-      if (sendEmail) {
+      if (sendEmail && !IS_DEV) {
         Object.keys(roommates).forEach(roommate => {
           console.log(`Sending email to ${roommate}`);
           cb(roommates, roommate, type, total, billDate, updates, prevBills);
         });
         console.log('Sending email to ifttt');
         cb(roommates, 'ifttt', type, total, billDate, updates, prevBills);
-      } else {
-        console.log('Saved to Firebase but did not send email. We\'re either still waiting on a bill or else we\'ve already sent an email for the month')
+      }
+
+      if (IS_DEV) {
+        cb(roommates, 'travis', type, total, billDate, updates, prevBills);
       }
     });
 };
