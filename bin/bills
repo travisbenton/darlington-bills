@@ -82,12 +82,11 @@ function saveOwedBill(type, total, date, cb) {
       }
 
       if (sendEmail) {
-        // Object.keys(roommates).forEach(roommate => {
-        //   console.log(`Sending email to ${roommate}`);
-        //   cb(roommates, roommate, type, total, billDate, updates, prevBills);
-        // });
+        Object.keys(roommates).forEach(roommate => {
+          console.log(`Sending email to ${roommate}`);
+          cb(roommates, roommate, type, total, billDate, updates, prevBills);
+        });
         console.log('Sending email to ifttt');
-        cb(roommates, 'travis', type, total, billDate, updates, prevBills);
         cb(roommates, 'ifttt', type, total, billDate, updates, prevBills);
       } else {
         console.log('Saved to Firebase but did not send email. We\'re either still waiting on a bill or else we\'ve already sent an email for the month')
