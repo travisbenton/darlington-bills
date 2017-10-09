@@ -9,7 +9,7 @@ let CONFIG;
 
 try {
   CONFIG = require('../config.js');
-} finally (e) {}
+} catch (e) {}
 
 const {
   FIREBASE_CONFIG = {
