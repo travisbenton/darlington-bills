@@ -3,7 +3,27 @@ const firebase = require('firebase');
 const Base64 = require('js-base64/base64.js').Base64;
 const google = require('googleapis');
 const googleAuth = require('google-auth-library');
+const CONFIG = require('./config.js');
 require('firebase/database');
+
+const {
+  FIREBASE_CONFIG = {
+    apiKey: process.env.FIREBASE_CONFIG_APIKEY,
+    authDomain: process.env.FIREBASE_CONFIG_AUTHDOMAIN,
+    databaseURL: process.env.FIREBASE_CONFIG_DATABASEURL,
+    storageBucket: process.env.FIREBASE_CONFIG_STORAGEBUCKET,
+    messagingSenderId: process.env.FIREBASE_CONFIG_MESSAGINGSENDERID
+  },
+  OAUTH_CONFIG = process.env.OAUTH_CONFIG.split(',')
+} = CONFIG;
+
+const ROOMMATE_ADDRESSES = {
+  adam: 'asgilroy@gmail.com',
+  reba: 'rebeccaannn@gmail.com',
+  sarah: 'sarahjeanbigelow@gmail.com',
+  travis: 'travisryanbenton@gmail.com',
+  ifttt: 'trigger@applet.ifttt.com'
+};
 
 const STATIC_MONTHLY_BILLS = {
   rent: '2100.00',
@@ -14,21 +34,6 @@ const BILL_EMAIL_ADDRESSES = {
   utilities: 'do-not-reply@coautilities.com',
   gas: 'ebill@texasgasservice.com'
 };
-const FIREBASE_CONFIG = {
-  apiKey: process.env.FIREBASE_CONFIG_APIKEY,
-  authDomain: process.env.FIREBASE_CONFIG_AUTHDOMAIN,
-  databaseURL: process.env.FIREBASE_CONFIG_DATABASEURL,
-  storageBucket: process.env.FIREBASE_CONFIG_STORAGEBUCKET,
-  messagingSenderId: process.env.FIREBASE_CONFIG_MESSAGINGSENDERID
-}
-const OAUTH_CONFIG = process.env.OAUTH_CONFIG.split(',');
-const ROOMMATE_ADDRESSES = {
-  adam: 'asgilroy@gmail.com',
-  reba: 'rebeccaannn@gmail.com',
-  sarah: 'sarahjeanbigelow@gmail.com',
-  travis: 'travisryanbenton@gmail.com',
-  ifttt: 'trigger@applet.ifttt.com'
-}
 const MONTHS = [
   "January",
   "February",
@@ -70,11 +75,12 @@ function saveOwedBill(type, total, date, cb) {
       }
 
       if (sendEmail) {
-        Object.keys(roommates).forEach(roommate => {
-          console.log(`Sending email to ${roommate}`);
-          cb(roommates, roommate, type, total, billDate, updates, prevBills);
-        });
+        // Object.keys(roommates).forEach(roommate => {
+        //   console.log(`Sending email to ${roommate}`);
+        //   cb(roommates, roommate, type, total, billDate, updates, prevBills);
+        // });
         console.log('Sending email to ifttt');
+        cb(roommates, 'travis', type, total, billDate, updates, prevBills);
         cb(roommates, 'ifttt', type, total, billDate, updates, prevBills);
       } else {
         console.log('Saved to Firebase but did not send email. We\'re either still waiting on a bill or else we\'ve already sent an email for the month')
