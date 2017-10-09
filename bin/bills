@@ -5,9 +5,11 @@ const google = require('googleapis');
 const googleAuth = require('google-auth-library');
 require('firebase/database');
 // -------- local
+let CONFIG;
+
 try {
-  const CONFIG = require('../config.js');
-} catch (e) {}
+  CONFIG = require('../config.js');
+} finally (e) {}
 
 const {
   FIREBASE_CONFIG = {
