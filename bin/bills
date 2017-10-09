@@ -7,7 +7,7 @@ require('firebase/database');
 // -------- local
 try {
   const CONFIG = require('../config.js');
-}
+} catch (e) {}
 
 const {
   FIREBASE_CONFIG = {
