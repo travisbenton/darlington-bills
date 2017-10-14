@@ -5,7 +5,6 @@ const google = require('googleapis');
 const googleAuth = require('google-auth-library');
 require('firebase/database');
 
-// local
 const EMAIL_TMPL = require('../emailTmpl.js');
 
 let CONFIG = {};
@@ -156,7 +155,7 @@ firebase.database().ref('tokens/').once('value').then(resp => {
       'From': 'travisryanbenton@gmail.com',
       'Content-type': 'text/html'
     }
-    const message = EMAIL_TMPL(roommates, roommate, type, date, payload, prevBills);
+    const message = EMAIL_TMPL({ roommates, roommate, type, date, payload, prevBills });
 
     console.log('sending email with these headers:');
     console.log(headers);

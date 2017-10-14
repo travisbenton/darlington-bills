@@ -1,4 +1,4 @@
-module.exports = (roommates, roommate, type, date, payload, prevBills) => {
+module.exports = ({ roommates, roommate, type, date, payload, prevBills }) => {
   const USER_SCOPED_BILLS = ['rent'];
   const MONTHS = [
     "January",
