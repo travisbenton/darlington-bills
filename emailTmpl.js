@@ -56,8 +56,8 @@ module.exports = ({ roommates, roommate, type, date, payload, prevBills }) => {
 
                             if (difference) {
                               change = difference && difference > 0 ?
-                                `<span style="font-size: 11px;">(<span style="color: green">+$${difference}</span> from last month)</span>` :
-                                `<span style="font-size: 11px;">(<span style="color: red">-$${Math.abs(difference)}</span> from last month)</span>`;
+                                `<span style="font-size: 11px;">(<span style="color: red">+$${difference}</span> from last month)</span>` :
+                                `<span style="font-size: 11px;">(<span style="color: green">-$${Math.abs(difference)}</span> from last month)</span>`;
                             }
 
                             total += billAmt;
