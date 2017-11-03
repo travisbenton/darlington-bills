@@ -68,7 +68,7 @@ module.exports = ({ roommates, roommate, type, date, payload, prevBills }) => {
                           ______________________<br />
                           <b>${roommate === 'ifttt' ? '' : '<a style="color: black;" href="https://cash.me/$travisbenton/${total}">'}$${total}${roommate === 'ifttt' ? '' : '</a>'} Total ${roommate === 'ifttt' ? '(Not including rent)' : ''}<br></b>
                         </p>
-                        ${roommate === 'ifttt' ? '' : '<a href="https://cash.me/$travisbenton/${total}" class="btn" style="margin: 0;padding: 10px 16px;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;color: #FFF;text-decoration: none;background-color: #666;font-weight: bold;margin-right: 10px;text-align: center;cursor: pointer;display: inline-block;">Pay Now</a><br />'}
+                        ${roommate === 'ifttt' ? '' : `<a href="https://cash.me/$travisbenton/${total}" class="btn" style="margin: 0;padding: 10px 16px;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;color: #FFF;text-decoration: none;background-color: #666;font-weight: bold;margin-right: 10px;text-align: center;cursor: pointer;display: inline-block;">Pay Now</a><br />`}
                         <p style="margin: 0;padding: 0;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;margin-bottom: 10px;font-weight: normal;font-size: 14px;line-height: 1.6;"><img src="http://travisbenton.github.io/images/${Math.floor(Math.random()*25)}.gif" style="margin: 5px 0 0 0;padding: 0;font-family: &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;max-width: 100%;"></p>
                       </td>
                     </tr>
