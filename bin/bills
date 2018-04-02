@@ -39,7 +39,7 @@ const STATIC_MONTHLY_BILLS = {
   cable: '65.03'
 };
 const BILL_EMAIL_ADDRESSES = {
-  utilities: 'do-not-reply@coautilities.com',
+  utilities: 'do-not-reply@coautilitiesemail.com',
   gas: 'ebill@texasgasservice.com'
 };
 
