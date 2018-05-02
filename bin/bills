@@ -36,7 +36,7 @@ const ROOMMATE_ADDRESSES = {
 
 const STATIC_MONTHLY_BILLS = {
   rent: '2100.00',
-  cable: '65.03'
+  cable: '67.16'
 };
 const BILL_EMAIL_ADDRESSES = {
   utilities: 'do-not-reply@coautilities.com',
@@ -82,6 +82,9 @@ function saveOwedBill(type, total, date, cb) {
       }
 
       if (IS_DEV) {
+        console.log('----------')
+        console.log(sendEmail)
+        console.log('----------')
         cb(roommates, 'travis', type, total, billDate, updates, prevBills);
       }
     });
